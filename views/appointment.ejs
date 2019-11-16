@@ -74,7 +74,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
+
 
                   <% for (i=0;i<appointments.length;i++) { %>
                   <% if(appointments[i].status=="accepted"){ %>
@@ -139,7 +139,7 @@
             </div>
             <img src="/assets/img/spinner.gif" id="loader" alt="loading" style="display: none">
             <div id="showAppointmentDetails" style="display: none;">
-              <div class="media align-items-center">
+              <div class="media align-items-center" style="margin-bottom: 15px">
                 <span class="avatar avatar-sm rounded-circle">
                   <img id="patient_image" alt="" src="">
                 </span>
@@ -147,13 +147,14 @@
                   <span id="patient_name" class="mb-0 text-sm  font-weight-bold"></span>
                 </div>
                 <div class="media-body ml-2 d-none d-lg-block">
-                  <span id="patient_problem" class="mb-0 text-sm  font-weight-bold"></span>
-                </div>
-                <div class="media-body ml-2 d-none d-lg-block">
                   <span id="patient_date" class="mb-0 text-sm  font-weight-bold"></span>
                 </div>
+                <div class="media-body ml-2 d-none d-lg-block">
+                  <span id="patient_problem" class="mb-0 text-sm  font-weight-bold"></span>
+                </div>
+
               </div>
-              <button id="close_detail" onclick="closeDetail()" class="btn btn-success btn-sm"
+              <button id="close_detail" onclick="closeDetail()" class="btn btn-primary btn-sm"
                 style="display: none">Close</button>
               <button id="diagnose_btn" onclick="diagnosed()" class="btn btn-success btn-sm"
                 style="display: none">Diagnosed</button>
@@ -302,7 +303,10 @@
 
     function findDetails(problem, apid, dfuid, pfuid, date, flag) {
 
-      console.log(date, problem);
+      //console.log(date, problem);
+      localStorage.setItem('date', date);
+      localStorage.setItem('pfuid', pfuid);
+      localStorage.setItem('apid', apid);
 
       $(".table-responsive").hide("fast");
       $("#loader").show();
@@ -329,6 +333,24 @@
     function closeDetail() {
       $("#showAppointmentDetails").hide("fast");
       $(".table-responsive").show("slow");
+    }
+
+    function diagnosed() {
+
+      var date = localStorage.getItem('date');
+      var patient_id = localStorage.getItem('pfuid');
+      var apt_id = localStorage.getItem('apid');
+      var doc_id = localStorage.getItem('uid');
+
+      var updates = {};
+
+      updates['/appointments/doctor/' + doc_id + '/' + date + '/' + apt_id + '/status'] = "diagnosed";
+      updates['/appointments/patients/' + patient_id + '/' + apt_id + '/status'] = "diagnosed";
+
+      firebase.database().ref().update(updates).then(function() {
+        alert("Successfully diagnosed");
+        location.reload();
+      });
     }
   </script>
 
