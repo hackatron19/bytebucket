@@ -12,6 +12,7 @@ var addArticleRouter = require('./routes/add-article');
 var registerRouter = require('./routes/register');
 var appointmentRouter =require('./routes/appointment');
 var profileRouter = require('./routes/profile');
+var diagnoseRouter = require('./routes/diagnose');
 
 var app = express();
 
@@ -59,6 +60,7 @@ app.use('/add-article',addArticleRouter);
 app.use('/register',registerRouter);
 app.use('/appointment', appointmentRouter);
 app.use('/profile',profileRouter);
+app.use('/diagnosed',diagnoseRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -44,7 +44,6 @@ router.get('/', function (req, res) {
     APP1.sort(function(a,b){
       return a.priority-b.priority;
     })
-    console.log(APP1);
 
     res.render('appointment', { title: "Appointments", appointments: APP1, app2: APP2 });
 
@@ -162,24 +161,54 @@ router.post('/reschedule', function (req, res) {
 
   firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date).orderByChild('status').equalTo('accepted').once('value', function (snap) {
     var list = snap.val();
-    var match_key, flag = 0;
-    var last;
-    
-    for (key in list) {
-      last = list[key].priority;
-      if (flag == 1) {
-        firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + key).update({ 'priority': list[key].priority - 1 });
-        firebase.database().ref('/appointments/patients/' + list[key].pfuid + '/' + key).update({ 'priority': list[key].priority - 1 });
-      }
 
-      if (key == apid) {
-        match_key = key;
-        flag = 1;
+    var list_arr = [];
+    for(key in list){
+      list_arr.push(list[key]);
+    }
+    list_arr.sort(function(a,b){
+      return a.priority-b.priority;
+    });
+
+    for(var i=0;i<list_arr.length;i++){
+      if(list_arr[i].appointmentId == apid){
+        for(j=i+1;j<list_arr.length;j++){
+          list_arr[j].priority--;
+        }
+        break;
       }
+    }
+
+    list_arr[i].priority = list_arr[--j].priority+1;
+
+    console.log("List",list_arr);
+
+    for(var i=0;i<list_arr.length;i++){
+      firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + list_arr[i].appointmentId).update({ 'priority': list_arr[i].priority});
+      firebase.database().ref('/appointments/patients/' + list_arr[i].pfuid + '/' + list_arr[i].appointmentId).update({ 'priority': list_arr[i].priority });
 
     }
-    firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + match_key).update({ 'priority': last  });
-    firebase.database().ref('/appointments/patients/' + list[match_key].pfuid + '/' + match_key).update({ 'priority': last  });
+
+  
+
+    // var match_key, flag = 0;
+    // var last;
+    
+    // for (key in list) {
+    //   last = list[key].priority;
+    //   if (flag == 1) {
+    //     firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + key).update({ 'priority': list[key].priority - 1 });
+    //     firebase.database().ref('/appointments/patients/' + list[key].pfuid + '/' + key).update({ 'priority': list[key].priority - 1 });
+    //   }
+
+    //   if (key == apid) {
+    //     match_key = key;
+    //     flag = 1;
+    //   }
+
+    // }
+    // firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + match_key).update({ 'priority': last  });
+    // firebase.database().ref('/appointments/patients/' + list[match_key].pfuid + '/' + match_key).update({ 'priority': last  });
 
   });
   res.send({'msg':'ok'});
