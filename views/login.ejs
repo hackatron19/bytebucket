@@ -72,6 +72,7 @@
                 </div>
                 <div class="text-center">
                   <input id="LogIn" type="submit" class="btn btn-primary my-4" value="Log In">
+                  <img src="/assets/img/spinner.gif" id="loader" alt="loading" style="display: none">
                 </div>
               </form>
             </div>
@@ -102,6 +103,8 @@
   login.onclick = function (event) {
 
     event.preventDefault();
+
+    document.getElementById('loader').style.display = "inline";
 
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
