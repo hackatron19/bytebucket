@@ -74,6 +74,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  
 
                   <% for (i=0;i<appointments.length;i++) { %>
                   <% if(appointments[i].status=="accepted"){ %>
@@ -290,6 +291,7 @@
 
         success: function (data, textStatus, jQxhr) {
           console.log("Success", data);
+          location.reload();
         },
         error: function (jqXhr, textStatus, errorThrown) {
           console.log(errorThrown);

@@ -4,7 +4,7 @@ var firebase = require('firebase');
 const nodemailer = require('nodemailer');
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
 
   //console.log(req.query);
 
@@ -27,17 +27,26 @@ router.get('/', function (req, res, next) {
     }
     var today = dd + '-' + mm + '-' + yyyy;
 
+    var td = mm*100+dd;
+
     for (key in result) {
       var res2 = result[key];
       for (key2 in res2) {
-        if(res2[key2].date == today)
+        var pdr = res2[key2].date.split('-');
+        var pn = parseInt(pdr[1])*100+parseInt(pdr[0]);
+
+        if (res2[key2].date == today)
           APP1.push(res2[key2]);
-        else
+        else if(pn>td)
           APP2.push(res2[key2]);
       }
     }
+    APP1.sort(function(a,b){
+      return a.priority-b.priority;
+    })
+    console.log(APP1);
 
-    res.render('appointment', { title: "Appointments", appointments: APP1, app2 : APP2 });
+    res.render('appointment', { title: "Appointments", appointments: APP1, app2: APP2 });
 
   });
 
@@ -51,11 +60,11 @@ router.post('/accept', function (req, res) {
   var apid = req.body.appointment.apid;
   var date = req.body.appointment.date;
 
-  firebase.database().ref('/appointments/doctor/'+dfuid+ '/' + date).orderByChild('status').equalTo('accepted').once('value', function (snap) {
+  firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date).orderByChild('status').equalTo('accepted').once('value', function (snap) {
     var dayapcount = snap.numChildren();
-    console.log("ac count",dayapcount);
+    console.log("ac count", dayapcount);
     var sno = dayapcount + 1;
-    
+
     var updates = {};
     updates['/appointments/patients/' + pfuid + '/' + apid + '/priority'] = sno;
     updates['/appointments/patients/' + pfuid + '/' + apid + '/status'] = "accepted";
@@ -66,7 +75,7 @@ router.post('/accept', function (req, res) {
 
       firebase.database().ref('/Patients/' + pfuid).once('value', function (snap) {
         var mail = snap.val().email;
-        //sendMail(mail, "accepted");
+        sendMail(mail, "accepted");
       });
 
 
@@ -145,10 +154,35 @@ function sendMail(mail, status) {
 
 router.post('/reschedule', function (req, res) {
   var appointment = req.body.appointment;
+  var apid = appointment.apid;
+  var dfuid = appointment.dfuid;
+  var pfuid = appointment.pfuid;
+  var date = appointment.date;
   console.log(appointment);
 
-  firebase.database().ref('/app')
-  res.send("ok");
+  firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date).orderByChild('status').equalTo('accepted').once('value', function (snap) {
+    var list = snap.val();
+    var match_key, flag = 0;
+    var last;
+    
+    for (key in list) {
+      last = list[key].priority;
+      if (flag == 1) {
+        firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + key).update({ 'priority': list[key].priority - 1 });
+        firebase.database().ref('/appointments/patients/' + list[key].pfuid + '/' + key).update({ 'priority': list[key].priority - 1 });
+      }
+
+      if (key == apid) {
+        match_key = key;
+        flag = 1;
+      }
+
+    }
+    firebase.database().ref('/appointments/doctor/' + dfuid + '/' + date + "/" + match_key).update({ 'priority': last  });
+    firebase.database().ref('/appointments/patients/' + list[match_key].pfuid + '/' + match_key).update({ 'priority': last  });
+
+  });
+  res.send({'msg':'ok'});
 });
 
 module.exports = router;
