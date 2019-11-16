@@ -14,9 +14,10 @@
     "firebase": "^7.3.0",
     "html-to-text": "^5.1.1",
     "http-errors": "~1.6.3",
+    "mongoose": "^5.7.10",
     "morgan": "~1.9.1",
+    "nodemailer": "^6.3.1",
     "quill-delta-to-html": "^0.11.0",
-    "quill-delta-to-plaintext": "^1.0.0",
-    "mongoose": "^5.7.10"
+    "quill-delta-to-plaintext": "^1.0.0"
   }
 }
