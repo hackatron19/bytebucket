@@ -3,6 +3,20 @@
 
 <head>
   <% include partials/head %>
+
+  <style>
+    #loader {
+      width: 50px;
+      position: relative;
+      top: 35%;
+      left: 44%;
+    }
+
+    #showAppointmentDetails {
+      width: 80%;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 
 <body>
@@ -47,11 +61,15 @@
             </div>
             <!-- Light table -->
             <div class="table-responsive">
+              <div class="col-12 text-center">
+                <h3 class="mb-0">Today's Appointments</h3>
+              </div>
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
                     <th>Problem</th>
                     <th>Date</th>
+                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -67,20 +85,80 @@
                       <span class="text-muted"><%=  appointments[i].date %></span>
                     </td>
                     <td>
-                      <button class="btn btn-sm btn-primary">view</button>
+                      <button
+                        onclick="findDetails('<%= appointments[i].problem %>', '<%= appointments[i].appointmentId %>', '<%= appointments[i].dfuid %>', '<%= appointments[i].pfuid %>', '<%= appointments[i].date %>', '1')"
+                        class="btn btn-sm btn-primary">view</button>
+                    </td>
+                    <td>
+                      <button
+                        onclick="reschedule('<%= appointments[i].appointmentId %>', '<%= appointments[i].dfuid %>', '<%= appointments[i].pfuid %>', '<%= appointments[i].date %>')"
+                        class="btn btn-sm btn-primary">Reschedule</button>
                     </td>
                   </tr>
                   <% } %>
                   <% } %>
 
+                </tbody>
+              </table>
 
+              <div class="col-12 text-center" style="margin-top: 20px">
+                <h3 class="mb-0">Upcoming Appointments</h3>
+              </div>
+
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Problem</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <% for (i=0;i<app2.length;i++) { %>
+                  <% if(app2[i].status=="accepted"){ %>
+                  <tr>
+                    <td class="font-weight-bold">
+                      <%=  app2[i].problem %>
+                    </td>
+                    <td>
+                      <span class="text-muted"><%=  app2[i].date %></span>
+                    </td>
+                    <td>
+                      <button
+                        onclick="findDetails('<%= app2[i].problem %>', '<%= app2[i].appointmentId %>', '<%= app2[i].dfuid %>', '<%= app2[i].pfuid %>', '<%= app2[i].date %>', '2')"
+                        class="btn btn-sm btn-primary">view</button>
+                    </td>
+                  </tr>
+                  <% } %>
+                  <% } %>
 
                 </tbody>
               </table>
             </div>
+            <img src="/assets/img/spinner.gif" id="loader" alt="loading" style="display: none">
+            <div id="showAppointmentDetails" style="display: none;">
+              <div class="media align-items-center">
+                <span class="avatar avatar-sm rounded-circle">
+                  <img id="patient_image" alt="" src="">
+                </span>
+                <div class="media-body ml-2 d-none d-lg-block">
+                  <span id="patient_name" class="mb-0 text-sm  font-weight-bold"></span>
+                </div>
+                <div class="media-body ml-2 d-none d-lg-block">
+                  <span id="patient_problem" class="mb-0 text-sm  font-weight-bold"></span>
+                </div>
+                <div class="media-body ml-2 d-none d-lg-block">
+                  <span id="patient_date" class="mb-0 text-sm  font-weight-bold"></span>
+                </div>
+              </div>
+              <button id="close_detail" onclick="closeDetail()" class="btn btn-success btn-sm"
+                style="display: none">Close</button>
+              <button id="diagnose_btn" onclick="diagnosed()" class="btn btn-success btn-sm"
+                style="display: none">Diagnosed</button>
+            </div>
           </div>
         </div>
-
         <div class="col-xl-4">
           <!-- Progress track -->
           <div class="card" style="height:480px;">
@@ -122,8 +200,6 @@
         </div>
 
       </div>
-
-
 
       <% include partials/footer %>
 
@@ -190,6 +266,67 @@
 
       location.reload();
 
+    }
+
+    function reschedule(apid, dfuid, pfuid, date) {
+
+      var ap_obj = {
+        "apid": apid,
+        "dfuid": dfuid,
+        "pfuid": pfuid,
+        "date": date
+      };
+
+      console.log(ap_obj);
+
+      $.ajax({
+        url: '/appointment/reschedule',
+        dataType: 'json',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          appointment: ap_obj
+        }),
+
+        success: function (data, textStatus, jQxhr) {
+          console.log("Success", data);
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(errorThrown);
+        }
+      });
+
+    }
+
+    function findDetails(problem, apid, dfuid, pfuid, date, flag) {
+
+      console.log(date, problem);
+
+      $(".table-responsive").hide("fast");
+      $("#loader").show();
+
+      firebase.database().ref('/Patients/' + pfuid).once('value').then(function (snap) {
+        var patient = snap.val();
+        console.log(patient);
+
+        $("#patient_image").attr('src', patient.photoUrl);
+        $("#patient_name").text(patient.name);
+        $("#patient_problem").text(problem);
+        $("#patient_date").text(date);
+        $("#close_detail").css("display", "inline");
+        $("#diagnose_btn").css("display", "none");
+        console.log("flag", flag);
+        if (flag == '1')
+          $("#diagnose_btn").css("display", "inline");
+        $("#loader").hide("slow");
+        $("#showAppointmentDetails").show("slow");
+      });
+
+    }
+
+    function closeDetail() {
+      $("#showAppointmentDetails").hide("fast");
+      $(".table-responsive").show("slow");
     }
   </script>
 
