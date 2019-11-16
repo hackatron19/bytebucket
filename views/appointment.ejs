@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include partials/head %>
+</head>
+
+<body>
+
+  <% include partials/sidenav %>
+  <!-- Main content -->
+  <div class="main-content" id="panel">
+    <!-- Topnav -->
+    <% include partials/topnav %>
+
+    <!-- Header -->
+    <!-- Header -->
+    <div class="header bg-primary pb-6" style="height:120px;">
+      <div class="container-fluid">
+        <div class="header-body">
+
+          <!-- Card stats -->
+
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card" style="height:480px;">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0">Accepted Appointments</h3>
+                </div>
+                <div class="col-6 text-right">
+                  <!-- <a href="#" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip"
+                data-original-title="Edit product">
+                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+                <span class="btn-inner--text">Export</span>
+              </a> -->
+                </div>
+              </div>
+            </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Problem</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <% for (i=0;i<appointments.length;i++) { %>
+                  <% if(appointments[i].status=="accepted"){ %>
+                  <tr>
+                    <td class="font-weight-bold">
+                      <%=  appointments[i].problem %>
+                    </td>
+                    <td>
+                      <span class="text-muted"><%=  appointments[i].date %></span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-primary">view</button>
+                    </td>
+                  </tr>
+                  <% } %>
+                  <% } %>
+
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <!-- Progress track -->
+          <div class="card" style="height:480px;">
+            <!-- Card header -->
+            <div class="card-header">
+              <!-- Title -->
+              <h5 class="h3 mb-0">Requests</h5>
+            </div>
+            <!-- Card body -->
+            <div class="card-body" style="overflow-y: auto;">
+              <!-- List group -->
+              <ul class="list-group list-group-flush list my--3">
+                <% for(i=0;i<appointments.length;i++){ %>
+                <% if(appointments[i].status=="pending"){ %>
+                <li class="list-group-item px-0">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <h4> <%= appointments[i].problem %> </h4>
+                      <h5> <%= appointments[i].date %> </h5>
+                    </div>
+                  </div>
+                  <div>
+
+                    <button
+                      onclick="acceptAppointment('<%= appointments[i].appointmentId %>', '<%= appointments[i].dfuid %>', '<%= appointments[i].pfuid %>', '<%= appointments[i].date %>')"
+                      class="btn btn-success">Accept</button>
+                    <button
+                      onclick="rejectAppointment('<%= appointments[i].appointmentId %>', '<%= appointments[i].dfuid %>', '<%= appointments[i].pfuid %>', '<%= appointments[i].date %>')"
+                      class="btn btn-danger">Reject</button>
+                  </div>
+                </li>
+                <% } %>
+
+                <% } %>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <% include partials/footer %>
+
+    </div>
+  </div>
+
+  <% include partials/foot %>
+
+  <script>
+    function acceptAppointment(apid, dfuid, pfuid, date) {
+
+      var ap_obj = {
+        "apid": apid,
+        "dfuid": dfuid,
+        "pfuid": pfuid,
+        "date": date
+      };
+      //console.log("ap", ap_obj);
+      $.ajax({
+        url: '/appointment/accept',
+        dataType: 'json',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          appointment: ap_obj
+        }),
+
+        success: function (data, textStatus, jQxhr) {
+          console.log("Success", data);
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(errorThrown);
+        }
+      });
+
+      location.reload();
+
+    }
+
+    function rejectAppointment(apid, dfuid, pfuid, date) {
+      var ap_obj = {
+        "apid": apid,
+        "dfuid": dfuid,
+        "pfuid": pfuid,
+        "date": date
+      };
+      //console.log("ap", ap_obj);
+      $.ajax({
+        url: '/appointment/reject',
+        dataType: 'json',
+        type: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          appointment: ap_obj
+        }),
+
+        success: function (data, textStatus, jQxhr) {
+          console.log("Success", data);
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(errorThrown);
+        }
+      });
+
+      location.reload();
+
+    }
+  </script>
+
+</body>
+
+</html>

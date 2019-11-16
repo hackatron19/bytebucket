@@ -3,6 +3,15 @@
 
 <head>
   <% include partials/head %>
+
+  <script>
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        window.location.href = "/dashboard";
+      }
+    });
+  </script>
+  
 </head>
 
 <body class="bg-default">
@@ -85,5 +94,33 @@
   <% include partials/foot %>
 
 </body>
+
+<script>
+
+  var login = document.getElementById('LogIn');
+
+  login.onclick = function (event) {
+
+    event.preventDefault();
+
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(function (user) {
+        localStorage.setItem('uid', user.user.uid);
+        window.location.href = "/dashboard?uid=" + user.user.uid;
+      })
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+        console.log(errorMessage);
+      });
+
+  }
+
+</script>
 
 </html>

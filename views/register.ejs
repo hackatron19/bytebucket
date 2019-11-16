@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <% include partials/head %>
+
+  <style>
+    #message,
+    #mobile-length {
+      display: none;
+    }
+
+    .invalid {
+      color: red;
+    }
+
+    .valid {
+      color: green;
+    }
+  </style>
+</head>
+
+<body class="bg-default">
+
+  <!-- Navbar -->
+  <nav id="navbar-main" class="navbar navbar-horizontal navbar-transparent navbar-main navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="/assets/img/brand/logo-white.png">
+      </a>
+  </nav>
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
+      <div class="separator separator-bottom separator-skew zindex-100">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
+          xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container mt--8 pb-5">
+      <!-- Table -->
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          <div class="card bg-secondary border-0">
+
+            <div class="card-body px-lg-5 py-lg-5">
+              <div class="text-center text-muted mb-4">
+                <small>Sign Up </small>
+              </div>
+              <form id="signUpForm" onsubmit="signupDoctor(event)" role="form">
+                <div id="sf1" class="frm">
+                  <fieldset>
+                    <legend>Step 1 of 3</legend>
+
+                    <div class="form-group">
+                      <!-- <label class="col-lg-2 control-label" for="uname">Your Name: </label>
+                      <div class="col-lg-6">
+                        <input type="text" placeholder="Your Name" id="uname" name="uname" class="form-control"
+                          autocomplete="off">
+                      </div> -->
+                      <div class="input-group input-group-merge input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                        </div>
+                        <input id="doc_name" class="form-control" placeholder="Name" type="text" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                        </div>
+                        <input id="doc_email" class="form-control" placeholder="Email" type="email" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
+                        </div>
+                        <input id="contact" class="form-control" placeholder="Mobile" type="text" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-world"></i></span>
+                        </div>
+                        <input id="city" class="form-control" placeholder="City" type="text" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-world"></i></span>
+                        </div>
+                        <input id="state" class="form-control" placeholder="State" type="text" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-pin-3"></i></span>
+                        </div>
+                        <input id="address" class="form-control" placeholder="Address" type="text" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="col-lg-10 col-lg-offset-2">
+                        <!-- open1 is given in the class that is binded with the click event -->
+                        <button class="btn btn-primary open1" type="button">Next <span
+                            class="fa fa-arrow-right"></span></button>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <!-- id will be unique, but class name will be same -->
+                <div id="sf2" class="frm" style="display: none">
+                  <fieldset>
+                    <legend>Step 2 of 3</legend>
+
+                    <!-- <div class="form-group">
+                      <label class="col-lg-2 control-label" for="uemail">Your Email: </label>
+                      <div class="col-lg-6">
+                        <input type="text" placeholder="Your Email" id="uemail" name="uemail" class="form-control"
+                          autocomplete="off">
+                      </div>
+                    </div> -->
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                        </div>
+                        <input id="password" class="form-control" placeholder="Choose Password" type="password"
+                          required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                        </div>
+                        <input id="confirm-password" class="form-control" placeholder="Confirm Password" type="password"
+                          required>
+                      </div>
+                    </div>
+
+
+
+                    <!-- <div class="clearfix" style="height: 10px;clear: both;"></div> -->
+
+                    <div class="form-group">
+                      <div class="col-lg-10 col-lg-offset-2">
+                        <!-- back2 unique class name  -->
+                        <button class="btn btn-warning back2" type="button"><span class="fa fa-arrow-left"></span>
+                          Back</button>
+                        <!-- open2 unique class name -->
+                        <button class="btn btn-primary open2" type="button">Next <span
+                            class="fa fa-arrow-right"></span></button>
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+
+                <!-- id will be unique, but class name will be same -->
+                <div id="sf3" class="frm" style="display: none;">
+                  <fieldset>
+                    <legend>Step 3 of 3</legend>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-single-02"></i></span>
+                        </div>
+                        <input id="speciality" class="form-control" placeholder="Speciality" type="text" required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
+                        </div>
+                        <input id="open-time" class="form-control" placeholder="Clinic Opening time" type="text" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
+                        </div>
+                        <input id="average-time" class="form-control" placeholder="Average Diagnostic Time" type="text"
+                          required>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <div class="input-group input-group-merge input-group-alternative">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="ni ni-book-bookmark"></i>
+                            &nbsp;&nbsp;&nbsp;Verification Document :
+                          </span>
+                        </div>
+                        <input id="verification-document" class="form-control" placeholder="Upload document" type="file"
+                          required>
+
+                      </div>
+                      <button id="upload" class="btn btn-primary btn-md mt-4">Upload</button>
+                    </div>
+
+
+                    <div class="form-group">
+                      <div class="col-lg-10 col-lg-offset-2 text-center">
+                        <!-- Unique class name -->
+                        <button class="btn btn-warning back3" type="button"><span class="fa fa-arrow-left"></span>
+                          Back</button>
+                        <!-- Unique class name -->
+                        <!-- <div class="text-center"></div>
+                          <input id="SignUp" type="submit" class="btn btn-primary mt-4" value="Create Account" disabled>
+                        </div> -->
+                        <button id="SignUp" class="btn btn-primary open3" type="button" disabled>Create Account
+                        </button>
+                        <img src="spinner.gif" alt="" id="loader" style="display: none">
+                      </div>
+                    </div>
+                  </fieldset>
+                </div>
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+
+  <% include partials/footer %>
+
+  <% include partials/foot %>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.js"></script> -->
+
+  <script type="text/javascript">
+
+    jQuery().ready(function () {
+
+      // validate form on keyup and submit
+      // var v = jQuery("#signUpForm").validate({
+      //   rules: {
+      //     doc_name: {
+      //       required: true,
+      //       minlength: 2,
+      //       maxlength: 16
+      //     },
+      //     doc_email: {
+      //       required: true,
+      //       minlength: 2,
+      //       email: true,
+      //       maxlength: 100,
+      //     },
+      //     upass1: {
+      //       required: true,
+      //       minlength: 6,
+      //       maxlength: 15,
+      //     },
+      //     upass2: {
+      //       required: true,
+      //       minlength: 6,
+      //       equalTo: "#upass1",
+      //     }
+
+      //   },
+      //   errorElement: "span",
+      //   errorClass: "help-inline-error",
+      // });
+
+      $(".open1").click(function () {
+
+        var name = $("#doc_name").val();
+        var email = $("#doc_email").val();
+        console.log(name, email);
+        if (name && email) {
+          $(".frm").hide("fast");
+          $("#sf2").show("slow");
+        }
+      });
+
+      $(".open2").click(function () {
+
+        var password = $("#password").val();
+        var confirm_password = $("#confirm-password").val();
+
+        if (password && confirm_password && password === confirm_password) {
+
+          $(".frm").hide("fast");
+          $("#sf3").show("slow");
+        }
+
+      });
+
+      $(".open3").click(function () {
+        if (v.form()) {
+          $("#loader").show();
+          setTimeout(function () {
+            $("#basicform").html('<h2>Thanks for your time.</h2>');
+          }, 1000);
+          return false;
+        }
+      });
+
+      $(".back2").click(function () {
+        $(".frm").hide("fast");
+        $("#sf1").show("slow");
+      });
+
+      $(".back3").click(function () {
+        $(".frm").hide("fast");
+        $("#sf2").show("slow");
+      });
+
+    });
+  </script>
+
+  <script>
+
+    var pswd = document.getElementById('password');
+    var lowercase = document.getElementById('lowercase');
+    var uppercase = document.getElementById('uppercase');
+    var digit = document.getElementById('digit');
+    var length = document.getElementById('length');
+    var mob_len = document.getElementById('mobile-length');
+
+    pswd.onfocus = function () {
+      document.getElementById("message").style.display = "block";
+    }
+
+    // When the user clicks outside of the password field, hide the message box
+    pswd.onblur = function () {
+      document.getElementById("message").style.display = "none";
+    }
+
+    pswd.onkeyup = function () {
+
+      var lowerCaseLetters = /[a-z]/g;
+      if (pswd.value.match(lowerCaseLetters)) {
+        lowercase.classList.remove("invalid");
+        lowercase.classList.add("valid");
+      } else {
+        lowercase.classList.remove("valid");
+        lowercase.classList.add("invalid");
+      }
+
+      var upperCaseLetters = /[A-Z]/g;
+      if (pswd.value.match(upperCaseLetters)) {
+        uppercase.classList.remove("invalid");
+        uppercase.classList.add("valid");
+      } else {
+        uppercase.classList.remove("valid");
+        uppercase.classList.add("invalid");
+      }
+
+      var numbers = /[0-9]/g;
+      if (pswd.value.match(numbers)) {
+        digit.classList.remove("invalid");
+        digit.classList.add("valid");
+      } else {
+        digit.classList.remove("valid");
+        digit.classList.add("invalid");
+      }
+
+      if (pswd.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+      } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+      }
+    }
+
+    var mobile = document.getElementById('contact');
+
+    mobile.onfocus = function () {
+      mob_len.style.display = "block";
+    }
+
+    mobile.onblur = function () {
+      mob_len.style.display = "none";
+    }
+
+    mobile.onkeyup = function () {
+      if (mobile.value.length == 10) {
+        mob_len.classList.remove("invalid");
+        mob_len.innerHTML = "Valid";
+        mob_len.classList.add("valid");
+      }
+      else {
+        mob_len.classList.remove("valid");
+        mob_len.innerHTML = "Must be 10 digits";
+        mob_len.classList.add("invalid");
+      }
+    }
+
+    var upload = document.getElementById('upload');
+    var download_url;
+
+    upload.onclick = function () {
+
+      const file_input = document.getElementById('verification-document');
+      var verification_file = file_input.files[0];
+
+      // Create the file metadata
+      var metadata = {
+        contentType: 'application/pdf'
+      };
+
+      var storageRef = firebase.storage().ref();
+
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      var uploadTask = storageRef.child('uploads/' + verification_file.name).put(verification_file, metadata);
+
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+        function (snapshot) {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case firebase.storage.TaskState.PAUSED: // or 'paused'
+              console.log('Upload is paused');
+              break;
+            case firebase.storage.TaskState.RUNNING: // or 'running'
+              console.log('Upload is running');
+              break;
+          }
+        }, function (error) {
+
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        }, function () {
+          // Upload completed successfully, now we can get the download URL
+          uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+            download_url = downloadURL;
+            document.getElementById('SignUp').disabled = false;
+            //console.log(upload_success, download_url);
+            //console.log('File available at', downloadURL);
+
+          });
+        });
+
+    }
+
+    function signupDoctor(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const speciality = document.getElementById('speciality').value;
+      const city = document.getElementById('city').value;
+      const state = document.getElementById('state').value;
+      const address = document.getElementById('address').value;
+      const contact = document.getElementById('contact').value;
+
+      if (download_url) {
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then(function (user) {
+            const doctor = {
+              "fuid": user.user.uid,
+              "name": name,
+              "rating": 0,
+              "count": 0,
+              "speciality": speciality,
+              "verified": false,
+              "pdf": download_url,
+              "address": {
+                "city": city,
+                "state": state,
+                "location": address
+              },
+              "mobile": contact
+            };
+            console.log(user);
+
+            firebase.database().ref('doctors/' + user.user.uid).set(doctor)
+              .then(function (res) {
+                window.location.href = "/dashboard?uid=" + user.user.uid;
+                //$.get("/dashboard", { uid : user.user.uid });
+              });
+
+
+
+
+
+          })
+          .catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+
+            console.log(errorMessage);
+          });
+      }
+      //console.log(form);
+    }
+  </script>
+</body>
+
+</html>

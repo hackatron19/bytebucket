@@ -10,7 +10,13 @@
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "express-session": "^1.17.0",
+    "firebase": "^7.3.0",
+    "html-to-text": "^5.1.1",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "quill-delta-to-html": "^0.11.0",
+    "quill-delta-to-plaintext": "^1.0.0",
+    "mongoose": "^5.7.10"
   }
 }

@@ -1,11 +1,188 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <% include partials/head %>
+  <script>
+
+    var appointments;
+
+    firebase.database().ref('/appointments/doctor/' + localStorage.getItem('uid')).on('value' ,function (snapshot) {
+        appointments = snapshot.val();
+        console.log(appointments);
+
+        var list_items = "";
+
+        for (var key in appointments) {
+          var count = 0;
+          for (subKey in appointments[key]) {
+            count++;
+          }
+          list_items += "<li class='list-group-item px-0'>" +
+            "<div class='row align-items-center' >" +
+            "<div class='col-auto'>" +
+            "<span class='step'>" + count + "</span>" +
+            "</div>" +
+            "<div class='col'>" +
+            "<h2>" + key + "</h2>" +
+            "</div></div></li >";
+          //console.log('key', key, 'len', count);
+        }
+
+        document.getElementById('show-appointments').innerHTML = list_items;
+      });
+
+  </script>
+
+  <style>
+    span.step {
+      background: #5e72e4;
+      border-radius: 1.8em;
+      -moz-border-radius: 0.8em;
+      -webkit-border-radius: 0.8em;
+      color: #ffffff;
+      display: inline-block;
+      font-weight: bold;
+      font-size: 1.2em;
+      line-height: 1.6em;
+      margin-right: 5px;
+      text-align: center;
+      width: 1.6em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <% include partials/sidenav %>
+  <!-- Main content -->
+  <div class="main-content" id="panel">
+    <!-- Topnav -->
+    <% include partials/topnav %>
+
+    <!-- Header -->
+    <!-- Header -->
+    <div class="header bg-primary pb-6" style="height:120px;">
+      <div class="container-fluid">
+        <div class="header-body">
+
+          <!-- Card stats -->
+
+        </div>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+
+      <div class="row">
+        <div class="col-xl-8">
+          <div class="card" style="height:480px;">
+            <!-- Card header -->
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mb-0">Articles</h3>
+                </div>
+                <div class="col-6 text-right">
+                  <!-- <a href="#" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip"
+                 data-original-title="Edit product">
+                 <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+                 <span class="btn-inner--text">Export</span>
+               </a> -->
+                </div>
+              </div>
+            </div>
+            <!-- Light table -->
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <!-- <thead class="thead-light">
+                   <tr>
+                     <th>Heading</th>
+                     <th>Date</th>
+                   </tr>
+                 </thead> -->
+                <tbody>
+                  <tr></tr>
+                  <% for (i=articles.length-1; i>=0; i--) { %>
+                  <tr data-toggle="modal" data-target="#modal-default<%= i %>">
+                    <td style="padding-left: 12px;
+                    padding-right: 10px; text-align: center;">
+                      <div>Published on</div>
+                      <div> <%= articles[i].postdate %></div>  
+                    </td>
+                    <td>
+                      <a href="#!" class="font-weight-bold">
+                        <%=  articles[i].heading %>
+                      </a>
+                      <div style="font-size:12px;">By <%= articles[i].author %> </div>
+                    </td>
+                  </tr>
+                  <% } %>
+
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <!-- Progress track -->
+          <div class="card" style="height:480px;">
+            <!-- Card header -->
+            <div class="card-header">
+              <!-- Title -->
+              <h5 class="h3 mb-0">Appointments Count </h5>
+            </div>
+            <!-- Card body -->
+            <div class="card-body" style="overflow-y: auto">
+              <!-- List group -->
+              <ul id="show-appointments" class="list-group list-group-flush list my--3">
+
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <% for (i=articles.length-1; i>=0; i--) { %>
+      <div class="modal fade" id="modal-default<%= i %>" + tabindex="-1" role="dialog" aria-labelledby="modal-default"
+        aria-hidden="true">
+        <div class="modal-dialog modal- modal-dialog-centered modal-" role="document">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-title-default">
+                <%= articles[i].heading %>
+
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">x</span>
+              </button>
+            </div>
+
+            <div class="modal-body" style="padding-top: 0;">
+              <hr style="margin-top: 0;">
+
+              <%- articles[i].description %>
+
+            </div>
+
+            <!-- <div class="modal-footer">
+               <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Close</button>
+             </div> -->
+
+          </div>
+        </div>
+      </div>
+
+      <% } %>
+
+
+      <% include partials/footer %>
+
+      <% include partials/foot %>
+
+</body>
+
 </html>
