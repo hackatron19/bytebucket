@@ -120,8 +120,8 @@ function sendMail(mail, status) {
     {
       service: 'Gmail',
       auth: {
-        user: "bytebucket1111@gmail.com",
-        pass: "bytebucketNITJSR"
+        user : "email",
+        pass : "password"
       }
     },
     {
