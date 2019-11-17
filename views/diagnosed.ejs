@@ -17,6 +17,41 @@
       margin: 0 auto;
     }
   </style>
+  <script>
+    var dfuid = localStorage.getItem('uid');
+    
+    firebase.database().ref('/appointments/doctor/'+dfuid).on('value',function(snap){
+      var data = snap.val();
+
+      var row="";
+      var row2 = "";
+
+      for(key in data){
+        
+        row2 += "<li>";
+        var dd=data[key];
+        count=0;
+        for(key2 in dd){
+          
+          var ap = dd[key2];
+          if(ap.status == 'diagnosed'){
+            count++;
+            row+='<tr><td>'+ap.problem+'</td>';
+            row+='<td>'+ap.date+'</td></tr>';
+          }
+        }
+        row2+='<div class="row"><div class="col-2">'+count+' </div>';
+        row2+='<div class="col-10">'+key+'</div></div>';
+        row2+='</li>';
+
+        row+='</tr>';
+      }
+      document.getElementById('d-table').innerHTML=row;
+      document.getElementById('count_list').innerHTML=row2;
+
+    });
+  
+  </script>
 </head>
 
 <body>
@@ -27,8 +62,6 @@
     <!-- Topnav -->
     <% include partials/topnav %>
 
-    <!-- Header -->
-    <!-- Header -->
     <div class="header bg-primary pb-6" style="height:120px;">
       <div class="container-fluid">
         <div class="header-body">
@@ -51,11 +84,7 @@
                   <h3 class="mb-0">Diagnosed Patients</h3>
                 </div>
                 <div class="col-6 text-right">
-                  <!-- <a href="#" class="btn btn-sm btn-neutral btn-round btn-icon" data-toggle="tooltip"
-                data-original-title="Edit product">
-                <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
-                <span class="btn-inner--text">Export</span>
-              </a> -->
+                
                 </div>
               </div>
             </div>
@@ -66,11 +95,9 @@
                   <tr>
                     <th>Problem</th>
                     <th>Date</th>
-                    <th></th>
-                    <th></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="d-table">
                   
 
                   
@@ -79,27 +106,6 @@
               </table>
             </div>
 
-            <img src="/assets/img/spinner.gif" id="loader" alt="loading" style="display: none">
-            <div id="showAppointmentDetails" style="display: none;">
-              <div class="media align-items-center">
-                <span class="avatar avatar-sm rounded-circle">
-                  <img id="patient_image" alt="" src="">
-                </span>
-                <div class="media-body ml-2 d-none d-lg-block">
-                  <span id="patient_name" class="mb-0 text-sm  font-weight-bold"></span>
-                </div>
-                <div class="media-body ml-2 d-none d-lg-block">
-                  <span id="patient_problem" class="mb-0 text-sm  font-weight-bold"></span>
-                </div>
-                <div class="media-body ml-2 d-none d-lg-block">
-                  <span id="patient_date" class="mb-0 text-sm  font-weight-bold"></span>
-                </div>
-              </div>
-              <button id="close_detail" onclick="closeDetail()" class="btn btn-success btn-sm"
-                style="display: none">Close</button>
-              <button id="diagnose_btn" onclick="diagnosed()" class="btn btn-success btn-sm"
-                style="display: none">Diagnosed</button>
-            </div>
           </div>
         </div>
         <div class="col-xl-4">
@@ -108,12 +114,12 @@
             <!-- Card header -->
             <div class="card-header">
               <!-- Title -->
-              <h5 class="h3 mb-0">Requests</h5>
+              <h5 class="h3 mb-0">Count per Day</h5>
             </div>
             <!-- Card body -->
             <div class="card-body" style="overflow-y: auto;">
               <!-- List group -->
-              <ul class="list-group list-group-flush list my--3">
+              <ul id="count_list" class="list-group list-group-flush list my--3">
                 
 
               </ul>
@@ -129,129 +135,6 @@
   </div>
 
   <% include partials/foot %>
-
-  <script>
-    function acceptAppointment(apid, dfuid, pfuid, date) {
-
-      var ap_obj = {
-        "apid": apid,
-        "dfuid": dfuid,
-        "pfuid": pfuid,
-        "date": date
-      };
-      //console.log("ap", ap_obj);
-      $.ajax({
-        url: '/appointment/accept',
-        dataType: 'json',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          appointment: ap_obj
-        }),
-
-        success: function (data, textStatus, jQxhr) {
-          console.log("Success", data);
-        },
-        error: function (jqXhr, textStatus, errorThrown) {
-          console.log(errorThrown);
-        }
-      });
-
-      location.reload();
-
-    }
-
-    function rejectAppointment(apid, dfuid, pfuid, date) {
-      var ap_obj = {
-        "apid": apid,
-        "dfuid": dfuid,
-        "pfuid": pfuid,
-        "date": date
-      };
-      //console.log("ap", ap_obj);
-      $.ajax({
-        url: '/appointment/reject',
-        dataType: 'json',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          appointment: ap_obj
-        }),
-
-        success: function (data, textStatus, jQxhr) {
-          console.log("Success", data);
-        },
-        error: function (jqXhr, textStatus, errorThrown) {
-          console.log(errorThrown);
-        }
-      });
-
-      location.reload();
-
-    }
-
-    function reschedule(apid, dfuid, pfuid, date) {
-
-      var ap_obj = {
-        "apid": apid,
-        "dfuid": dfuid,
-        "pfuid": pfuid,
-        "date": date
-      };
-
-      console.log(ap_obj);
-
-      $.ajax({
-        url: '/appointment/reschedule',
-        dataType: 'json',
-        type: 'post',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          appointment: ap_obj
-        }),
-
-        success: function (data, textStatus, jQxhr) {
-          console.log("Success", data);
-          location.reload();
-        },
-        error: function (jqXhr, textStatus, errorThrown) {
-          console.log(errorThrown);
-        }
-      });
-
-    }
-
-    function findDetails(problem, apid, dfuid, pfuid, date, flag) {
-
-      console.log(date, problem);
-
-      $(".table-responsive").hide("fast");
-      $("#loader").show();
-
-      firebase.database().ref('/Patients/' + pfuid).once('value').then(function (snap) {
-        var patient = snap.val();
-        console.log(patient);
-
-        $("#patient_image").attr('src', patient.photoUrl);
-        $("#patient_name").text(patient.name);
-        $("#patient_problem").text(problem);
-        $("#patient_date").text(date);
-        $("#close_detail").css("display", "inline");
-        $("#diagnose_btn").css("display", "none");
-        console.log("flag", flag);
-        if (flag == '1')
-          $("#diagnose_btn").css("display", "inline");
-        $("#loader").hide("slow");
-        $("#showAppointmentDetails").show("slow");
-      });
-
-    }
-
-    function closeDetail() {
-      $("#showAppointmentDetails").hide("fast");
-      $(".table-responsive").show("slow");
-    }
-  </script>
 
 </body>
 

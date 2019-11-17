@@ -173,22 +173,22 @@
             <div class="card-body" style="overflow-y: auto;">
               <!-- List group -->
               <ul class="list-group list-group-flush list my--3">
-                <% for(i=0;i<appointments.length;i++){ %>
-                <% if(appointments[i].status=="pending"){ %>
+                <% for(i=0;i<total.length;i++){ %>
+                <% if(total[i].status=="pending"){ %>
                 <li class="list-group-item px-0">
                   <div class="row align-items-center">
                     <div class="col">
-                      <h4> <%= appointments[i].problem %> </h4>
-                      <h5> <%= appointments[i].date %> </h5>
+                      <h4> <%= total[i].problem %> </h4>
+                      <h5> <%= total[i].date %> </h5>
                     </div>
                   </div>
                   <div>
 
                     <button
-                      onclick="acceptAppointment('<%= appointments[i].appointmentId %>', '<%= appointments[i].dfuid %>', '<%= appointments[i].pfuid %>', '<%= appointments[i].date %>')"
+                      onclick="acceptAppointment('<%= total[i].appointmentId %>', '<%= total[i].dfuid %>', '<%= total[i].pfuid %>', '<%= total[i].date %>')"
                       class="btn btn-success">Accept</button>
                     <button
-                      onclick="rejectAppointment('<%= appointments[i].appointmentId %>', '<%= appointments[i].dfuid %>', '<%= appointments[i].pfuid %>', '<%= appointments[i].date %>')"
+                      onclick="rejectAppointment('<%= total[i].appointmentId %>', '<%= total[i].dfuid %>', '<%= total[i].pfuid %>', '<%= total[i].date %>')"
                       class="btn btn-danger">Reject</button>
                   </div>
                 </li>

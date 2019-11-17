@@ -11,6 +11,8 @@ router.get('/', function (req, res) {
   firebase.database().ref('/appointments/doctor/' + req.query.uid).once('value', function (snap) {
     var result = snap.val();
 
+    var app = [];
+
     var APP1 = [];
     var APP2 = [];
 
@@ -35,6 +37,8 @@ router.get('/', function (req, res) {
         var pdr = res2[key2].date.split('-');
         var pn = parseInt(pdr[1])*100+parseInt(pdr[0]);
 
+        app.push(res2[key2]);
+
         if (res2[key2].date == today)
           APP1.push(res2[key2]);
         else if(pn>td)
@@ -45,7 +49,7 @@ router.get('/', function (req, res) {
       return a.priority-b.priority;
     })
 
-    res.render('appointment', { title: "Appointments", appointments: APP1, app2: APP2 });
+    res.render('appointment', { title: "Appointments", appointments: APP1, app2: APP2,total:app });
 
   });
 
